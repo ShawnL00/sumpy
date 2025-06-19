@@ -48,7 +48,7 @@ __doc__ = """
 .. autoclass:: H2DLocalExpansion
 .. autoclass:: Y2DLocalExpansion
 .. autoclass:: LineTaylorLocalExpansion
-
+.. autoclass:: AsymptoticDividingLineTaylorExpansion
 
 """
 
@@ -167,14 +167,27 @@ class LineTaylorLocalExpansion(LocalExpansionBase):
 # }}}
 
 
-# {{{ AsymDline taylor
-class AsymptoticsDividingLineTaylorExpansion(LocalExpansionBase):
+ # {{{ Asymptotic dividing line Taylor expansion
+class AsymptoticDividingLineTaylorExpansion(LocalExpansionBase):
+    r"""
+    A target-specific modified line Taylor expansion.
+
+    The expansion line is defined as :math:`l(\tau) = \text{avec} + \tau \cdot \text{bvec}` 
+    at a target point :math:`x`. The modified line Taylor expansion takes the form:
+
+    .. math::
+        \sum_{k=0}^{\text{order}} \frac{g_k}{k!} \tau^k,
+
+    where:
+
+    .. math::
+    g_k := \frac{d^k}{d\tau^k} \left( \frac{\text{kernel}(l(\tau))}{\text{asymptotic}(l(\tau))} \right) \bigg|_{\tau=0}
+    """
     
     def __init__(self, kernel, asymptotic, order, tau=1, use_rscale=None, m2l_translation=None):
         super().__init__(kernel, order, use_rscale, m2l_translation)
         self.asymptotic = asymptotic
         self.tau = tau
-    
     
     def get_storage_index(self, k):
         return k
@@ -186,7 +199,6 @@ class AsymptoticsDividingLineTaylorExpansion(LocalExpansionBase):
         from sumpy.symbolic import PymbolicToSympyMapperWithSymbols, Symbol
 
         expr = PymbolicToSympyMapperWithSymbols()(self.asymptotic)
-        expr = expr.xreplace({Symbol(f"d{i}"): dist_vec_i for i, dist_vec_i in enumerate(scaled_dist_vec)})
         
         tau = sym.Symbol("tau")
     
