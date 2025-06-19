@@ -49,6 +49,7 @@ __doc__ = """
 .. autoclass:: Y2DLocalExpansion
 .. autoclass:: LineTaylorLocalExpansion
 
+
 """
 
 
@@ -166,8 +167,9 @@ class LineTaylorLocalExpansion(LocalExpansionBase):
 # }}}
 
 
-# {{{ Asymline taylor
-class AsymLineTaylorLocalExpansion(LocalExpansionBase):
+# {{{ AsymDline taylor
+class AsymptoticsDividingLineTaylorExpansion(LocalExpansionBase):
+    
     def __init__(self, kernel, asymptotic, order, tau=1, use_rscale=None, m2l_translation=None):
         super().__init__(kernel, order, use_rscale, m2l_translation)
         self.asymptotic = asymptotic
