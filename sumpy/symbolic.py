@@ -411,7 +411,24 @@ class SpatialConstant(prim.Variable):
 
 
 class PymbolicToSympyLikeMixin:
+    r"""Mixin for :class:`sumpy.interop.common.PymbolicToSympyLikeMapper` that
+    maps :mod:`sumpy` specific expressions to the backend.
+
+    If :attr:`symbols` is *True*, it handles:
+
+    * Converting variables (such as :math:`\pi` and the imaginary :math:`i`) to
+      the corresponding backend constants. Otherwise, these would be converted
+      to numbers (floating or complex).
+    * Converting subscripts to the ``{name}{index}`` convention used by :mod:`sumpy`.
+    * Converting special functions (such as ``hankel_1``) to custom backend
+      expressions.
+    """
+
     symbols: bool
+    """If *True*, convert known :mod:`sumpy` symbols to backend equivalents.
+    Otherwise, they are converted to generic variants (e.g. ``pi`` becomes a
+    float instead of a ``sympy.pi``).
+    """
 
     def __init__(self, *, symbols: bool = False) -> None:
         super().__init__()
@@ -471,7 +488,14 @@ if HAS_SYMENGINE:
 
 
 class SympyLikeToPymbolicMixin:
+    """Mixin for :class:`sumpy.interop.SympyLikeToPymbolicMapper` that converts
+    backend expressions to :mod:`sumpy` specific variants.
+
+    See :class:`PymbolicToSympyLikeMixin` for details on special symbol handling.
+    """
+
     symbols: bool
+    """If *True*, convert special backend symbols to custom :mod:`sumpy` expressions."""
 
     def __init__(self, *, symbols: bool = False) -> None:
         super().__init__()
